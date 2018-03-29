@@ -1,0 +1,73 @@
+version: 1.0
+name: import-vm-apb
+description: Import Virtual Machine
+bindable: False
+async: optional
+metadata:
+  displayName: Import VM (APB)
+  imageUrl: https://cdn.pbrd.co/images/H5Gutd7.png
+plans:
+  - name: vmware
+    description: Use v2v to import a Virtual Machine from VMWare vCenter
+    free: True
+    metadata:
+      displayName: Import from VMWare
+    parameters:
+      - title: VMware url to EXSi
+        name: url
+        type: string
+        required: true
+      - title: Virtual machine name
+        name: vm_name
+        type: string
+        required: true
+      - title: VMware Admin
+        name: username
+        type: string
+        required: true
+        display_type: username
+      - title: VMware Admin Password
+        name: password
+        type: string
+        required: true
+        display_type: password
+  - name: url
+    description: Create a Virtual Machine from a downloaded disk image
+    free: True
+    metadata:
+      displayName: Import from URL
+    parameters:
+      - title: Openshift Admin User
+        name: admin_user
+        type: string
+        required: true
+      - title: Openshift Admin Password
+        name: admin_password
+        type: string
+        required: true
+        display_type: password
+      - title: Disk Image URL
+        name: disk_image_url
+        type: string
+        required: true
+      - title: Virtual Machine Type
+        name: vm_type
+        type: enum
+        enum: ['default']
+        required: True
+        default: default
+        display_type: select
+      - title: Virtual Machine Name
+        name: vm_name
+        type: string
+        required: true
+      - title: Number of CPUs
+        name: nr_cpus
+        required: true
+        type: int
+        default: 1
+      - title: Memory (in Megabytes)
+        name: mem
+        required: true
+        type: int
+        default: 1024

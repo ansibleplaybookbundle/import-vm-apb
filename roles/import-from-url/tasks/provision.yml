@@ -1,0 +1,37 @@
+---
+- include: "login.yml"
+
+- name: Get content metadata
+  uri:
+    url: "{{ disk_image_url }}"
+    method: HEAD
+  register: response
+
+- name: Calculate PVC size
+  set_fact:
+    # Use 4% FS overhead based on this research
+    # https://rwmj.wordpress.com/2009/11/08/filesystem-metadata-overhead/
+    size_bytes: "{{ (response.content_length|int * 1.04)|int }}"
+
+- name: Build PVC
+  template:
+    src: cdi-pvc.yml
+    dest: /tmp/pvc.yml
+
+- name: Debug generated pvc
+  command: cat /tmp/pvc.yml
+  register: debug_out
+- name: Show generated pvc
+  debug:
+    msg: "{{ debug_out.stdout }}"
+
+- name: Provision PVC
+  command: "oc apply -f /tmp/pvc.yml"
+
+- name: Build OfflineVM
+  template:
+    src: "ovm-{{ vm_type }}.yml"
+    dest: /tmp/ovm.yml
+
+- name: Provision OfflineVM
+  command: "oc apply -f /tmp/ovm.yml"

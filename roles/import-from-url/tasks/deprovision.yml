@@ -1,0 +1,8 @@
+---
+- include: "login.yml"
+
+- name: Delete OfflineVM
+  command: "oc delete ovm {{ vm_name }}"
+
+- name: Delete PVC
+  command: "oc delete pvc {{ vm_name }}-disk-01"
