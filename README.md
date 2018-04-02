@@ -45,4 +45,17 @@ more types will be added as needed.*
 | Memory               | 1024          |           | The amount of memory (in Megabytes) to assign to the virtual machine. |
 
 ## Import from VMWare
-*Coming Soon!*
+To use this option, select the *Import from VMWare* plan. You will need to supply
+VMware's url from where you want to import, virtual machine name to be imported
+and the VMware's administrator credentials. Once deployed, a virtual machine is
+created with a PVC containing imported image from VMware.
+
+### Required credentials
+The current design of this APB requires that an OpenShift User and corresponding
+password be specified.  This is a temporary inconvenience which should be
+removed in the near future.  Please be sure to choose an account that has
+privileges to create resources (PVC and OfflineVirtualMachine) in the chosen
+project.
+
+### Limitations
+At the moment we can import virtual machine having one disk and one network interface.

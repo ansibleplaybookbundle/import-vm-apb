@@ -13,6 +13,15 @@ plans:
     metadata:
       displayName: Import from VMWare
     parameters:
+      - title: Openshift Admin User
+        name: admin_user
+        type: string
+        required: true
+      - title: Openshift Admin Password
+        name: admin_password
+        type: string
+        required: true
+        display_type: password
       - title: VMware url to EXSi
         name: url
         type: string
