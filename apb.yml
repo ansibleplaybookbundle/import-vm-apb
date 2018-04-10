@@ -3,6 +3,8 @@ name: import-vm-apb
 description: Import Virtual Machine
 bindable: False
 async: optional
+tags:
+  - virtualmachine
 metadata:
   displayName: Import Virtual Machine
   imageUrl: https://cdn.pbrd.co/images/H5Gutd7.png
