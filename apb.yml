@@ -3,30 +3,32 @@ name: import-vm-apb
 description: Import Virtual Machine
 bindable: False
 async: optional
+tags:
+  - virtualmachine
 metadata:
-  displayName: Import VM (APB)
+  displayName: Import Virtual Machine
   imageUrl: https://cdn.pbrd.co/images/H5Gutd7.png
 plans:
   - name: vmware
-    description: Use v2v to import a Virtual Machine from VMWare vCenter
+    description: Import a virtual machine from VMware vCenter
     free: True
     metadata:
-      displayName: Import from VMWare
+      displayName: Import from VMware
     parameters:
-      - title: Openshift Admin Username
+      - title: OpenShift Admin Username
         name: admin_user
         type: string
         required: true
-      - title: Openshift Admin Password
+      - title: OpenShift Admin Password
         name: admin_password
         type: string
         required: true
         display_type: password
-      - title: VMware url to EXSi
+      - title: VMware URL to EXSi
         name: url
         type: string
         required: true
-      - title: Virtual machine name
+      - title: Virtual Machine Name
         name: vm_name
         type: string
         required: true
@@ -41,16 +43,16 @@ plans:
         required: true
         display_type: password
   - name: url
-    description: Create a Virtual Machine from a downloaded disk image
+    description: Create a virtual machine from a downloaded disk image
     free: True
     metadata:
       displayName: Import from URL
     parameters:
-      - title: Openshift Admin User
+      - title: OpenShift Admin User
         name: admin_user
         type: string
         required: true
-      - title: Openshift Admin Password
+      - title: OpenShift Admin Password
         name: admin_password
         type: string
         required: true
