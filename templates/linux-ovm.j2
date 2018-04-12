@@ -1,0 +1,24 @@
+apiVersion: kubevirt.io/v1alpha1
+kind: OfflineVirtualMachine
+metadata:
+  name: {{ VMNAME }}
+spec:
+  running: false
+  template:
+    terminationGracePeriodSeconds: 0
+    domain:
+      cpu:
+        cores: {{ CORES }}
+      resources:
+        requests:
+          memory: {{ MEMORY}}{{ UNIT }}
+      devices:
+        disks:
+        - name: disk-1
+          disk:
+            bus: {{ BUS }}
+          volumeName: volume-1
+    volumes:
+      - name: volume-1
+        persistentVolumeClaim:
+          name: {{ PVCNAME }}

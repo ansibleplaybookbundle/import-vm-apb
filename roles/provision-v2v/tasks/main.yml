@@ -1,4 +1,4 @@
-- include: "login.yml"
+- include_tasks: login.yml
 
 - name: execute run script
-  shell: ./run.sh {{ vm_name }} {{ username }} {{ password }} {{ url }}
+  command: chdir=/v2v.d ./run-v2v.sh {{ vm_name }} {{ username }} {{ password }} {{ url }} {{ os_type }} {{ image_type }}

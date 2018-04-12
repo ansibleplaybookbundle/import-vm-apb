@@ -1,0 +1,77 @@
+#!/bin/bash
+
+set -e
+
+[[ "$DEBUG" ]] && set -x
+
+echo "$@"
+
+DSTD=${1:-/v2v-dst}
+SRCTYPE=${2}
+SRC=${3}
+SRCURI=${4}
+OS=${5:-linux}
+TYPE=${6:-ovm}
+SRCPASS=$(echo $SOURCE_PASSWORD)
+
+BASEDIR=$(readlink -f $(dirname $(readlink -f $0))/..)
+
+die() { echo $@ >&2 ; exit 1 ; }
+
+main() {
+  [[ "$DSTD" ]] || die "No destination given"
+  [[ "$SRCTYPE" ]] || die "No source type given"
+  [[ "$SRC" ]] || die "No source given"
+  [[ "$SRCTYPE" = "libvirt" && -z "$SRCURI" ]] && die "Please provide valid uri"
+  [[ "$SRCTYPE" = "libvirt" && "$SRC" =~ ^vpx && -z "$SRCPASS" ]] && die "Please provide password"
+
+  transformVM "$SRCTYPE" "$SRC" "$SRCURI" "$SRCPASS" "$OS" "$TYPE"
+}
+
+transformVM() {
+  local SRCTYPE=$1
+  local SRC="$2"
+  local SRCURI="$3"
+  local SRCPASS="$4"
+  local OS="$5"
+  local TYPE="$6"
+  local WD="$(basename $SRC).d"
+
+  echo "  Converting source: $SRC"
+  mkdir -p $WD
+
+  ls -shal $WD
+
+  local NAME=$(basename $SRC | sed "s/[^a-zA-Z0-9-]/-/g" | tr "[:upper:]" "[:lower:]")
+
+  # generate disk and domxml
+  [[ "$SRCURI" ]] && SRCURI="-ic $SRCURI"
+  if [[ "SRCPASS" ]] ; then
+    echo $SRCPASS > pass
+    SRCPASS="--password-file pass"
+  fi
+  if [[ "$DEBUG" ]] ; then
+    DEBUG_OPTS="-v -x"
+  fi
+  virt-v2v $DEBUG_OPTS -i "$SRCTYPE" $SRCPASS $SRCURI "$SRC" -o local -on $NAME -oa sparse -of raw -os $DSTD --machine-readable
+  if [[ "SRCPASS" ]] ; then
+    rm -f pass
+  fi
+
+  local DOMXML=$(ls $DSTD/*.xml)
+
+  # we support only one disk, it needs to be aligned with DNS-1123
+  export PVCNAME=$(echo $SRC-disk-1 | sed -r 's/[_.]+/-/g')
+  export VMNAME=$(echo $SRC | sed -r 's/[_.]+/-/g')
+
+  # get resources from vm xml
+  export CORES=$(xmllint --xpath "/domain/vcpu/text()" $DOMXML)
+  export MEMORY=$(xmllint --xpath "/domain/memory/text()" $DOMXML)
+  export UNIT=$(xmllint --xpath "string(/domain/memory/@unit)" $DOMXML)
+  export BUS=$(xmllint --xpath "string(/domain/devices/disk/target/@bus)" $DOMXML)
+
+  # Create job offlinevirtualmachine
+  j2 ${OS}-${TYPE}.j2 | oc create -f -
+}
+
+main

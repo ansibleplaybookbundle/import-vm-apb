@@ -42,6 +42,16 @@ plans:
         type: string
         required: true
         display_type: password
+      - title: Operating system type
+        name: os_type
+        default: linux
+        enum: ['linux', 'windows']
+        type: enum
+      - title: Virtual machine is imported as
+        name: image_type
+        default: ovm
+        enum: ['ovm', 'template']
+        type: enum        
   - name: url
     description: Create a virtual machine from a downloaded disk image
     free: True
