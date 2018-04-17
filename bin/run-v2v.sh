@@ -74,7 +74,7 @@ size=$(grep -Eow "[0-9]+[\.]?[0-9]+[MG]" output.txt)'i'
 rm -f output.txt
 
 # we support only one disk, it needs to be aligned with DNS-1123
-PVCNAME=$(echo $VM_NAME-disk-1 | sed -r 's/[_.]+/-/g')
+PVCNAME=$(echo $VM_NAME-disk-01 | sed -r 's/[_.]+/-/g')
 VMNAME=$(echo $VM_NAME | sed -r 's/[_.]+/-/g')
 
 ENCODED_PASS=$(echo -n $PASS | base64)
@@ -168,7 +168,8 @@ objects:
                  "\${SOURCE_NAME}",
                  "\${SOURCE_URI}",
                  "\${OS_TYPE}",
-                 "\${IMAGE_TYPE}",]
+                 "\${IMAGE_TYPE}",
+                 "\${size}]",]
           env:
           - name: "DEBUG"
             value: "1"

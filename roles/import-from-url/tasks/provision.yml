@@ -28,10 +28,22 @@
 - name: Provision PVC
   command: "oc apply -f /tmp/pvc.yml"
 
-- name: Build OfflineVM
-  template:
-    src: "ovm-{{ vm_type }}.yml"
-    dest: /tmp/ovm.yml
+- name: Set pvc_name
+  set_fact:
+    pvc_name: "{{ vm_name }}-disk-01"
 
-- name: Provision OfflineVM
-  command: "oc apply -f /tmp/ovm.yml"
+- name: Set disk_bus
+  set_fact:
+     disk_bus: "{{ disk_bus_by_os_type[os_type] }}"
+
+- name: Set disk_size_bytes
+  set_fact:
+    disk_size_bytes: "{{ size_bytes }}"
+
+- name: Build VM resources
+  template:
+    src: "{{ role_path }}/../../templates/{{ os_type }}-{{ image_type }}.j2"
+    dest: /tmp/vm-resources.yml
+
+- name: Provision VM resources
+  command: "oc apply -f /tmp/vm-resources.yml"

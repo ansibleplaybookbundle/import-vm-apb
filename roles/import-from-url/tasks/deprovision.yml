@@ -1,8 +1,25 @@
 ---
 - include: "login.yml"
 
-- name: Delete OfflineVM
-  command: "oc delete ovm {{ vm_name }}"
+- name: Set unused template variables
+  set_fact:
+    size_bytes: 0
+    pvc_name: "{{ vm_name }}-disk-01"
+    disk_bus: "{{ disk_bus_by_os_type[os_type] }}"
+    disk_size_bytes: 0
+
+- name: Build VM resources
+  template:
+    src: "{{ role_path }}/../../templates/{{ os_type }}-{{ image_type }}.j2"
+    dest: /tmp/vm-resources.yml
+
+- name: Delete VM resources
+  command: "oc delete -f /tmp/vm-resources.yml --ignore-not-found=true"
+
+- name: Build PVC
+  template:
+    src: cdi-pvc.yml
+    dest: /tmp/pvc.yml
 
 - name: Delete PVC
-  command: "oc delete pvc {{ vm_name }}-disk-01"
+  command: "oc delete -f /tmp/pvc.yml --ignore-not-found=true"
