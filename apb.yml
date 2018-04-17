@@ -8,6 +8,8 @@ tags:
 metadata:
   displayName: Import Virtual Machine
   imageUrl: https://cdn.pbrd.co/images/H5Gutd7.png
+  longDescription: |
+     Import Virtual Machine from an existing image or a VMware environment.
 plans:
   - name: vmware
     description: Import a virtual machine from VMware vCenter
