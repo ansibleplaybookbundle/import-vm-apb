@@ -8,8 +8,9 @@ VM_NAME=${1}
 USER=${2}
 PASS=${3}
 URI=${4}
-OS=${5:-linux}
-TYPE=${6:-ovm}
+NS=${5}
+OS=${6:-linux}
+TYPE=${7:-ovm}
 
 die() { echo $@ >&2 ; exit 1 ; }
 
@@ -35,7 +36,7 @@ export LIBVIRT_AUTH_FILE=libvirt.auth
 virsh -c 'vpx://'$USER'@'$URI'?no_verify=1' dumpxml $VM_NAME >> $DOMXML
 rm -f libvirt.auth
 
-if [ $DOMXML does not exist ];
+if [ ! -f $DOMXML ];
 then
   die "Requested vm do not exists"
 fi
@@ -118,12 +119,10 @@ objects:
   kind: ServiceAccount
   metadata:
     name: kubevirt-privileged
-    namespace: default
 - apiVersion: rbac.authorization.k8s.io/v1beta1
   kind: ClusterRole
   metadata:
     name: kubevirt-v2v
-    namespace: default
     labels:
       kubevirt.io: ""
   rules:
@@ -150,12 +149,11 @@ objects:
   subjects:
   - kind: ServiceAccount
     name: kubevirt-privileged
-    namespace: default
+    namespace: $NS
 - kind: Job
   apiVersion: batch/v1 
   metadata:
-    name: v2v
-    namespace: default
+    name: v2v-$VMNAME
   spec:
     backoffLimit: 1
     template:
@@ -221,6 +219,6 @@ objects:
 EOY
 
 # create the job
-oc process --local -f template.yaml -p SOURCE_TYPE=libvirt -p SOURCE_NAME=$VM_NAME -p SOURCE_URI=vpx://$USER@$URI?no_verify=1 -p OS_TYPE=$OS -p IMAGE_TYPE=$TYPE | oc create -f -
+oc process --local -f template.yaml -p SOURCE_TYPE=libvirt -p SOURCE_NAME=$VM_NAME -p SOURCE_URI=vpx://$USER@$URI?no_verify=1 -p OS_TYPE=$OS -p IMAGE_TYPE=$TYPE | oc apply -f -
 
 rm -f template.yaml

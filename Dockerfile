@@ -49,6 +49,13 @@ COPY playbooks /opt/apb/actions
 COPY roles /opt/ansible/roles
 RUN chmod -R g=u /opt/{ansible,apb}
 RUN yum -y install libvirt-client curl qemu-img wget && yum clean all
+# We need this to get oc v3.9 due to the issue with oc apply. Once we would update apb-base to use 3.9 we can remove it
+RUN wget https://github.com/openshift/origin/releases/download/v3.9.0/openshift-origin-client-tools-v3.9.0-191fece-linux-64bit.tar.gz
+RUN tar zxvf openshift-origin-client-tools-v3.9.0-191fece-linux-64bit.tar.gz
+RUN mv openshift-origin-client-tools-v3.9.0-191fece-linux-64bit/oc /usr/bin
+RUN rm -rf openshift-origin-client-tools-v3.9.0-191fece-linux-64bit
+RUN chmod u+x /usr/bin/oc
+# future removal ends here
 COPY bin/run-v2v.sh /v2v.d/
 RUN setfacl -Rm u:apb:rwx /v2v.d
 USER apb

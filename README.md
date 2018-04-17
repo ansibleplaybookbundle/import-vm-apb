@@ -50,12 +50,6 @@ VMware's url from where you want to import, virtual machine name to be imported
 and the VMware's administrator credentials. Once deployed, a virtual machine is
 created with a PVC containing imported image from VMware.
 
-It is important to run following command before virtual machine import:
-
-```bash
-$ oc adm policy add-scc-to-user privileged system:serviceaccount:default:kubevirt-privileged
-```
-
 ### Required credentials
 The current design of this APB requires that an OpenShift User and corresponding
 password be specified.  This is a temporary inconvenience which should be
