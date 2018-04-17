@@ -89,7 +89,7 @@ plans:
         required: true
         type: int
         default: 1
-      - title: Memory (in Megabytes)
+      - title: Memory (MiB)
         name: mem
         required: true
         type: int
