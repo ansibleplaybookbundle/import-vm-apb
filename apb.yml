@@ -84,8 +84,8 @@ plans:
         name: vm_name
         type: string
         required: true
-      - title: Number of CPUs
-        name: nr_cpus
+      - title: Number of CPU Cores
+        name: nr_cores
         required: true
         type: int
         default: 1
