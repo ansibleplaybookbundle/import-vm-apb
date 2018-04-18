@@ -14,7 +14,7 @@ spec:
       terminationGracePeriodSeconds: 0
       domain:
         cpu:
-          cores: {{ nr_cpus|int }}
+          cores: {{ nr_cores|int }}
         resources:
           requests:
             memory: "{{ mem }}M"
