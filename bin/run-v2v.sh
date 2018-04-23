@@ -70,7 +70,7 @@ rm -f cookies.txt
 
 # get disk size
 qemu-img info 'json: { "file.cookie": "vmware_soap_session='$cookie'", "file.sslverify": "off", "file.driver": "https", "file.url": "'$diskUri'", "file.timeout": 2000 }' > output.txt
-size=$(grep -Eow "[0-9]+\.[0-9]+[MG]" output.txt)'i'
+size=$(grep -Eow "[0-9]+[\.]?[0-9]+[MG]" output.txt)'i'
 rm -f output.txt
 
 # we support only one disk, it needs to be aligned with DNS-1123
