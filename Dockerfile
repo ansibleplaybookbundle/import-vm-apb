@@ -47,9 +47,6 @@ ICAgZGVmYXVsdDogMQogICAgICAtIHRpdGxlOiBNZW1vcnkgKE1pQikKICAgICAgICBuYW1lOiBt\
 ZW0KICAgICAgICByZXF1aXJlZDogdHJ1ZQogICAgICAgIHR5cGU6IGludAogICAgICAgIGRlZmF1\
 bHQ6IDEwMjQK"
 
-
-COPY playbooks /opt/apb/actions
-COPY roles /opt/ansible/roles
 RUN chmod -R g=u /opt/{ansible,apb}
 RUN yum -y install libvirt-client curl qemu-img wget && yum clean all
 # We need this to get oc v3.9 due to the issue with oc apply. Once we would update apb-base to use 3.9 we can remove it
@@ -61,4 +58,8 @@ RUN chmod u+x /usr/bin/oc
 # future removal ends here
 COPY bin/run-v2v.sh /v2v.d/
 RUN setfacl -Rm u:apb:rwx /v2v.d
+
+COPY playbooks /opt/apb/actions
+COPY roles /opt/ansible/roles
+
 USER apb
