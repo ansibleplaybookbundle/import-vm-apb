@@ -15,11 +15,12 @@ objects:
   metadata:
     name: ${NAME}
   spec:
+    running: false
     template:
       spec:
         domain:
           cpu:
-            cores: ${CPU_CORES}
+            cores: ${{'{{'}}CPU_CORES{{'}}'}}
           resources:
             requests:
               memory: ${MEMORY}

@@ -3,4 +3,4 @@ release: true
 mem_unit: Mi
 disk_bus_by_os_type:
   linux: virtio
-  windows: ide
+  windows: sata

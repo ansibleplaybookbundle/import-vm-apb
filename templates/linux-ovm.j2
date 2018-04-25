@@ -5,20 +5,21 @@ metadata:
 spec:
   running: false
   template:
-    terminationGracePeriodSeconds: 0
-    domain:
-      cpu:
-        cores: {{ nr_cores }}
-      resources:
-        requests:
-          memory: {{ mem }}{{ mem_unit }}
-      devices:
-        disks:
-        - name: disk-1
-          disk:
-            bus: {{ disk_bus }}
-          volumeName: volume-1
-    volumes:
+    spec:
+      terminationGracePeriodSeconds: 0
+      domain:
+        cpu:
+          cores: {{ nr_cores }}
+        resources:
+          requests:
+            memory: {{ mem }}{{ mem_unit }}
+        devices:
+          disks:
+          - name: disk-1
+            disk:
+              bus: {{ disk_bus }}
+            volumeName: volume-1
+      volumes:
       - name: volume-1
         persistentVolumeClaim:
-          name: {{ pvc_name }}
+          claimName: {{ pvc_name }}

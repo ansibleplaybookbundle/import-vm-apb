@@ -5,40 +5,41 @@ metadata:
 spec:
   running: false
   template:
-    terminationGracePeriodSeconds: 0
-    domain:
-      features:
-        acpi: {}
-        apic: {}
-        hyperv:
-          relaxed: {}
-          vapic: {}
-          spinlocks:
-            spinlocks: 8191
-      clock:
-        utc: {}
-        timer:
-          hpet:
-            present: false
-          pit:
-            tickPolicy: delay
-          rtc:
-            tickPolicy: catchup
-          hyperv: {}
-      cpu:
-        cores: {{ nr_cores }}
-      machine:
-        type: q35
-      resources:
-        requests:
-          memory: {{ mem }}{{ mem_unit }}
-      devices:
-        disks:
-        - name: disk-1
-          disk:
-            bus: {{ disk_bus }}
-          volumeName: volume-1
+    spec:
+      terminationGracePeriodSeconds: 0
+      domain:
+        features:
+          acpi: {}
+          apic: {}
+          hyperv:
+            relaxed: {}
+            vapic: {}
+            spinlocks:
+              spinlocks: 8191
+        clock:
+          utc: {}
+          timer:
+            hpet:
+              present: false
+            pit:
+              tickPolicy: delay
+            rtc:
+              tickPolicy: catchup
+            hyperv: {}
+        cpu:
+          cores: {{ nr_cores }}
+        machine:
+          type: q35
+        resources:
+          requests:
+            memory: {{ mem }}{{ mem_unit }}
+        devices:
+          disks:
+          - name: disk-1
+            disk:
+              bus: {{ disk_bus }}
+            volumeName: volume-1
       volumes:
-        - name: volume-1
-          persistentVolumeClaim:
-            name: {{ pvc_name }}
+      - name: volume-1
+        persistentVolumeClaim:
+          claimName: {{ pvc_name }}
