@@ -46,4 +46,4 @@
     dest: /tmp/vm-resources.yml
 
 - name: Provision VM resources
-  command: "oc apply -f /tmp/vm-resources.yml"
+  command: "oc create -f /tmp/vm-resources.yml"
