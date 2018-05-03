@@ -53,7 +53,7 @@ plans:
         name: image_type
         default: ovm
         enum: ['ovm', 'template']
-        type: enum        
+        type: enum
   - name: url
     description: Create a virtual machine from a downloaded disk image
     free: True
@@ -94,3 +94,22 @@ plans:
         required: true
         type: int
         default: 1024
+  - name: libvirt
+    description: Create a virtual machine from libvirt
+    free: True
+    metadata:
+      displayName: Import from libvirt
+    parameters:
+      - title: OpenShift Admin User
+        name: admin_user
+        type: string
+        required: true
+      - title: OpenShift Admin Password
+        name: admin_password
+        type: string
+        required: true
+        display_type: password
+      - title: Virtual Machine Name
+        name: vm_name
+        type: string
+        required: true
