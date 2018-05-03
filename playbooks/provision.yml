@@ -10,6 +10,8 @@
     when: _apb_plan_id == 'url'
   - role: provision-v2v
     when: _apb_plan_id == 'vmware'
+  - role: libvirt
+    when: _apb_plan_id == 'libvirt'
   vars:
     action: provision
     cluster: openshift

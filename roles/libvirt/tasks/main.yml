@@ -1,0 +1,4 @@
+- include_tasks: login.yml
+
+- name: execute libvirt-to-kubevirt script
+  command: chdir=/v2v.d ./libvirt-to-kubevirt.sh {{ vm_name }}

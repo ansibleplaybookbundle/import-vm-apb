@@ -1,0 +1,9 @@
+- name: Login As Super User
+  command: "oc login -u {{ admin_user }} -p {{ admin_password }}"
+  when: cluster=="openshift"
+
+- name: Change project to {{ namespace }}
+  command: "oc project {{ namespace }}"
+
+- name: Add priviliged policy for User
+  command: "oc adm policy add-scc-to-user privileged system:serviceaccount:{{ namespace }}:kubevirt-privileged"
