@@ -12,6 +12,12 @@
     # Use 4% FS overhead based on this research
     # https://rwmj.wordpress.com/2009/11/08/filesystem-metadata-overhead/
     size_bytes: "{{ (response.content_length|int * 1.04)|int }}"
+  when: disk_size_gb == 0
+
+- name: Calculate PVC size
+  set_fact:
+    size_bytes: "{{ (disk_size_gb|int * 1073741824 * 1.04)|int }}"
+  when: disk_size_gb != 0
 
 - name: Build PVC
   template:
