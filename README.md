@@ -59,3 +59,6 @@ project.
 
 ### Limitations
 At the moment we can import virtual machine having one disk and one network interface.
+
+>Note:
+After adding PVC name and pushing the newly build apb image to the broker, you would see 2 apb of the same name in the console. To avoid this, while editing the PVC details change the `displayName` of the apb under `metadata` in `apb.yml`
