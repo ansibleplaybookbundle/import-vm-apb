@@ -1,7 +1,8 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: {{ VMNAME }}-template
+  name: {{ vm_name }}-template
+  namespace: openshift
   annotations:
     description: "OCP KubeVirt Microsoft Windows Server 2016 VM template"
     tags: "kubevirt,ocp,template,windows"
@@ -14,6 +15,7 @@ objects:
   metadata:
     name: ${NAME}
   spec:
+    running: false
     template:
       spec:
         domain:
@@ -36,7 +38,7 @@ objects:
                 tickPolicy: catchup
               hyperv: {}
           cpu:
-            cores: ${CPU_CORES}
+            cores: ${{'{{'}}CPU_CORES{{'}}'}}
           machine:
             type: q35
           resources:
@@ -46,19 +48,31 @@ objects:
             disks:
               - name: disk1
                 disk:
-                  bus: {{ BUS }}
+                  bus: {{ disk_bus }}
                 volumeName: volume-1
         volumes:
           - name: volume-1
             persistentVolumeClaim:
-              claimName: {{ PVCNAME }}
+              claimName: claimName: ${NAME}-disk-01
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: ${NAME}-disk-01
+    annotations:
+      k8s.io/CloneRequest: {{ pvc_name }}
+  spec:
+    storageClassName: kubevirt
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: {{ disk_size_bytes }}
 parameters:
 - name: NAME
   description: Name for the new VM
 - name: MEMORY
   description: Amount of memory
-  value: {{ MEMORY}}{{ UNIT }}
+  value: {{ mem }}{{ mem_unit }}
 - name: CPU_CORES
   description: Amount of cores
-  value: "{{ CORES }}"
-
+  value: "{{ nr_cores }}"

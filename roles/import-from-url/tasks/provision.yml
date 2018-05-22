@@ -12,6 +12,12 @@
     # Use 4% FS overhead based on this research
     # https://rwmj.wordpress.com/2009/11/08/filesystem-metadata-overhead/
     size_bytes: "{{ (response.content_length|int * 1.04)|int }}"
+  when: disk_size_gb == 0
+
+- name: Calculate PVC size
+  set_fact:
+    size_bytes: "{{ (disk_size_gb|int * 1073741824 * 1.04)|int }}"
+  when: disk_size_gb != 0
 
 - name: Build PVC
   template:
@@ -28,10 +34,22 @@
 - name: Provision PVC
   command: "oc apply -f /tmp/pvc.yml"
 
-- name: Build OfflineVM
-  template:
-    src: "ovm-{{ vm_type }}.yml"
-    dest: /tmp/ovm.yml
+- name: Set pvc_name
+  set_fact:
+    pvc_name: "{{ vm_name }}-disk-01"
 
-- name: Provision OfflineVM
-  command: "oc apply -f /tmp/ovm.yml"
+- name: Set disk_bus
+  set_fact:
+     disk_bus: "{{ disk_bus_by_os_type[os_type] }}"
+
+- name: Set disk_size_bytes
+  set_fact:
+    disk_size_bytes: "{{ size_bytes }}"
+
+- name: Build VM resources
+  template:
+    src: "{{ role_path }}/../../templates/{{ os_type }}-{{ image_type }}.j2"
+    dest: /tmp/vm-resources.yml
+
+- name: Provision VM resources
+  command: "oc create -f /tmp/vm-resources.yml"

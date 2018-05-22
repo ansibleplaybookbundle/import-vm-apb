@@ -12,6 +12,7 @@ SRC=${3}
 SRCURI=${4}
 OS=${5:-linux}
 TYPE=${6:-ovm}
+PVC_SIZE=${7}
 SRCPASS=$(echo $SOURCE_PASSWORD)
 
 BASEDIR=$(readlink -f $(dirname $(readlink -f $0))/..)
@@ -61,14 +62,15 @@ transformVM() {
   local DOMXML=$(ls $DSTD/*.xml)
 
   # we support only one disk, it needs to be aligned with DNS-1123
-  export PVCNAME=$(echo $SRC-disk-1 | sed -r 's/[_.]+/-/g')
-  export VMNAME=$(echo $SRC | sed -r 's/[_.]+/-/g')
+  export vm_name=$(echo $SRC | sed -r 's/[_.]+/-/g')
+  export pvc_name="${vm_name}-disk-01"
 
   # get resources from vm xml
-  export CORES=$(xmllint --xpath "/domain/vcpu/text()" $DOMXML)
-  export MEMORY=$(xmllint --xpath "/domain/memory/text()" $DOMXML)
-  export UNIT=$(xmllint --xpath "string(/domain/memory/@unit)" $DOMXML)
-  export BUS=$(xmllint --xpath "string(/domain/devices/disk/target/@bus)" $DOMXML)
+  export nr_cores=$(xmllint --xpath "/domain/vcpu/text()" $DOMXML)
+  export mem=$(xmllint --xpath "/domain/memory/text()" $DOMXML)
+  export mem_unit=$(xmllint --xpath "string(/domain/memory/@unit)" $DOMXML)
+  export disk_bus=$(xmllint --xpath "string(/domain/devices/disk/target/@bus)" $DOMXML)
+  export disk_size_bytes=${PVC_SIZE}
 
   # Create job offlinevirtualmachine
   j2 ${OS}-${TYPE}.j2 | oc create -f -
