@@ -68,7 +68,8 @@ transformVM() {
   # get resources from vm xml
   export nr_cores=$(xmllint --xpath "/domain/vcpu/text()" $DOMXML)
   export mem=$(xmllint --xpath "/domain/memory/text()" $DOMXML)
-  export mem_unit=$(xmllint --xpath "string(/domain/memory/@unit)" $DOMXML)
+  unit=$(xmllint --xpath "string(/domain/memory/@unit)" $DOMXML)
+  export mem_unit=${unit::-1}
   export disk_bus=$(xmllint --xpath "string(/domain/devices/disk/target/@bus)" $DOMXML)
   export disk_size_bytes=${PVC_SIZE}
 
