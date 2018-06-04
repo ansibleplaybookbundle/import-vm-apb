@@ -5,7 +5,9 @@ metadata:
   annotations:
     kubevirt.io/storage.import.endpoint: "{{ disk_image_url }}"
 spec:
-  storageClassName: kubevirt
+{% if storage_class is defined %}
+  storageClassName: {{ storage_class }}
+{% endif %}
   accessModes:
   - ReadWriteOnce
   resources:

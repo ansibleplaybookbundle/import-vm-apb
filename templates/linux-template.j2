@@ -43,7 +43,9 @@ objects:
     annotations:
       k8s.io/CloneRequest: {{ pvc_name }}
   spec:
-    storageClassName: kubevirt
+{% if storage_class is defined %}
+    storageClassName: {{ storage_class }}
+{% endif %}
     accessModes:
       - ReadWriteOnce
     resources:
