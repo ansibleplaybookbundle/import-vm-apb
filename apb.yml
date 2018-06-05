@@ -60,15 +60,6 @@ plans:
     metadata:
       displayName: Import from URL
     parameters:
-      - title: OpenShift Admin User
-        name: admin_user
-        type: string
-        required: true
-      - title: OpenShift Admin Password
-        name: admin_password
-        type: string
-        required: true
-        display_type: password
       - title: Disk Image URL
         name: disk_image_url
         type: string
