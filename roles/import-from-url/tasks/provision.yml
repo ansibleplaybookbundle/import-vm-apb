@@ -33,7 +33,7 @@
     msg: "{{ debug_out.stdout }}"
 
 - name: Provision PVC
-  command: "oc apply -f /tmp/pvc.yml"
+  command: "oc create -f /tmp/pvc.yml"
 
 - name: Set pvc_name
   set_fact:
