@@ -2,6 +2,17 @@
 - name: Change project to {{ namespace }}
   command: "oc project {{ namespace }}"
 
+# Before doing anything check if the PVC already exists, if it
+# does, then don't waste the effor to look stuff up as it will
+# fail.
+- name: Check for existing PVC
+  command: "oc get pvc {{ vm_name }}-disk-01"
+  register: pvc_exists
+  # This looks odd, the oc command queries for the pvc, and we continue if there is
+  # an error (it can't find the PVC) and no stdout output. This won't solve a race
+  # condition, but its a useful first check regardless.
+  failed_when: pvc_exists.stdout != ""
+
 - name: Get content metadata
   uri:
     url: "{{ disk_image_url }}"
