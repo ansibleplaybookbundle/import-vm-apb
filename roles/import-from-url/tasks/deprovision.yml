@@ -1,6 +1,5 @@
 ---
-- name: Change project to {{ namespace }}
-  command: "oc project {{ namespace }}"
+- include: "login.yml"
 
 - name: Set unused template variables
   set_fact:
