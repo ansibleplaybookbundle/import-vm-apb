@@ -96,6 +96,9 @@ plans:
         name: disk_size_gb
         type: int
         default: 0
+      - title: Storage Class
+        name: storage_class
+        type: string
       - title: Virtual machine is imported as
         name: image_type
         default: ovm
