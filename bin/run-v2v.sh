@@ -10,7 +10,7 @@ PASS=${3}
 URI=${4}
 NS=${5}
 OS=${6:-linux}
-TYPE=${7:-ovm}
+TYPE=${7:-vm}
 
 die() { echo $@ >&2 ; exit 1 ; }
 
@@ -105,7 +105,7 @@ parameters:
 - name: OS_TYPE
   description: "(Optional) OS type of the VM about to be imported"
 - name: IMAGE_TYPE
-  description: "(Optional) Specify whether to import VM as an offline vm or a template"
+  description: "(Optional) Specify whether to import VM as a VM or a template"
 
 objects:
 - apiVersion: v1
@@ -129,7 +129,7 @@ objects:
     - apiGroups:
       - kubevirt.io
       resources:
-      - offlinevirtualmachines
+      - virtualmachines
       verbs:
         - get
         - list

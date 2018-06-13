@@ -1,5 +1,5 @@
-apiVersion: kubevirt.io/v1alpha1
-kind: OfflineVirtualMachine
+apiVersion: kubevirt.io/v1alpha2
+kind: VirtualMachine
 metadata:
   name: {{ vm_name }}
 spec:
@@ -8,8 +8,28 @@ spec:
     spec:
       terminationGracePeriodSeconds: 0
       domain:
+        features:
+          acpi: {}
+          apic: {}
+          hyperv:
+            relaxed: {}
+            vapic: {}
+            spinlocks:
+              spinlocks: 8191
+        clock:
+          utc: {}
+          timer:
+            hpet:
+              present: false
+            pit:
+              tickPolicy: delay
+            rtc:
+              tickPolicy: catchup
+            hyperv: {}
         cpu:
           cores: {{ nr_cores }}
+        machine:
+          type: q35
         resources:
           requests:
             memory: {{ mem }}{{ mem_unit }}

@@ -51,8 +51,8 @@ plans:
         type: enum
       - title: Import Virtual Machine as
         name: image_type
-        default: ovm
-        enum: ['ovm', 'template']
+        default: vm
+        enum: ['vm', 'template']
         type: enum        
   - name: url
     description: Create a virtual machine from a downloaded disk image
@@ -101,6 +101,6 @@ plans:
         type: string
       - title: Virtual machine is imported as
         name: image_type
-        default: ovm
-        enum: ['ovm', 'template']
+        default: vm
+        enum: ['vm', 'template']
         type: enum

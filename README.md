@@ -17,7 +17,7 @@ and associated with the imported disk image.
 The current design of this APB requires that an OpenShift User and corresponding
 password be specified.  This is a temporary inconvenience which should be
 removed in the near future.  Please be sure to choose an account that has
-privileges to create resources (PVC and OfflineVirtualMachine) in the chosen
+privileges to create resources (PVC and VirtualMachine(s)) in the chosen
 project. 
 
 ### Supported disk image formats
@@ -54,7 +54,7 @@ created with a PVC containing imported image from VMware.
 The current design of this APB requires that an OpenShift User and corresponding
 password be specified.  This is a temporary inconvenience which should be
 removed in the near future.  Please be sure to choose an account that has
-privileges to create resources (PVC and OfflineVirtualMachine) in the chosen
+privileges to create resources (PVC and VirtualMachine(s)) in the chosen
 project.
 
 ### Limitations

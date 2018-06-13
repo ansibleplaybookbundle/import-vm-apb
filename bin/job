@@ -11,7 +11,7 @@ SRCTYPE=${2}
 SRC=${3}
 SRCURI=${4}
 OS=${5:-linux}
-TYPE=${6:-ovm}
+TYPE=${6:-vm}
 PVC_SIZE=${7}
 SRCPASS=$(echo $SOURCE_PASSWORD)
 
@@ -72,7 +72,7 @@ transformVM() {
   export disk_bus=$(xmllint --xpath "string(/domain/devices/disk/target/@bus)" $DOMXML)
   export disk_size_bytes=${PVC_SIZE}
 
-  # Create job offlinevirtualmachine
+  # Create job virtualmachine
   j2 ${OS}-${TYPE}.j2 | oc create -f -
 }
 
