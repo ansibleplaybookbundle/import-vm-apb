@@ -45,6 +45,31 @@
 - name: Provision PVC
   command: "oc create -f /tmp/pvc.yml"
 
+- name: set pvc status jsonpath selectors
+  set_fact:
+    import_status_path: .metadata.annotations.kubevirt\.io/storage\.import\.pod\.phase
+    pvc_status_path: .status.phase
+
+- Name: Check PVC bound status
+  command: "oc get pvc {{ vm_name }}-disk-01 -o jsonpath='{ {{pvc_status_path}} }'"
+  register: pvc_bound_status
+  until: pvc_bound_status.stdout == 'Bound'
+  retries: 60
+  delay: 3
+
+- name: Pod Import Status
+  command: "oc get pvc {{ vm_name }}-disk-01 -o jsonpath='{ {{import_status_path}} }'"
+  register: import_status
+  # The values of import_status follow standard kubernetes pod phase values. Pending/Running/Succeeded/Failed/Unknown
+  # The importer POD will update the status.
+  until: import_status.stdout == 'Succeeded' or import_status.stdout == 'Failed'
+  retries: 17280 # This equates to a day of retries. It could take a while to import the disk, so give it a long timeout.
+  delay: 5
+
+- fail:
+    msg: "Unable to import image into PVC, check importer pod log for details."
+  when: import_status.stdout != 'Succeeded'
+
 - name: Set pvc_name
   set_fact:
     pvc_name: "{{ vm_name }}-disk-01"
