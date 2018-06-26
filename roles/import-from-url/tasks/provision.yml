@@ -45,11 +45,6 @@
 - name: Provision PVC
   command: "oc create -f /tmp/pvc.yml"
 
-- name: set pvc status jsonpath selectors
-  set_fact:
-    import_status_path: .metadata.annotations.kubevirt\.io/storage\.import\.pod\.phase
-    pvc_status_path: .status.phase
-
 - Name: Check PVC bound status
   command: "oc get pvc {{ vm_name }}-disk-01 -o jsonpath='{ {{pvc_status_path}} }'"
   register: pvc_bound_status
