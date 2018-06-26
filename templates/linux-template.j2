@@ -10,8 +10,8 @@ metadata:
     kubevirt.io/os: rhel7.4
     miq.github.io/kubevirt-is-vm-template: "true"
 objects:
-- apiVersion: kubevirt.io/v1alpha1
-  kind: OfflineVirtualMachine
+- apiVersion: kubevirt.io/v1alpha2
+  kind: VirtualMachine
   metadata:
     name: ${NAME}
   spec:
