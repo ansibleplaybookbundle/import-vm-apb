@@ -19,6 +19,8 @@ release_notes() {
 
 summary() {
     log "Building summary"
+    echo "$RELREF"
+    echo
     echo "This release follows $PREREF and consists of $(git log --oneline $RELSPANREF | wc -l) changes, contributed by"
     echo -n "$(git shortlog -sne $RELSPANREF | wc -l) people, leading to"
     echo "$(git diff --shortstat $RELSPANREF)."
