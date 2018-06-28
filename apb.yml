@@ -15,7 +15,7 @@ plans:
     description: Import a virtual machine from VMware vCenter.
     free: True
     metadata:
-      displayName: b. Import from VMware.
+      displayName: c. Import from VMware.
     parameters:
       - title: OpenShift Admin Username
         name: admin_user
@@ -127,7 +127,7 @@ plans:
     description: Create a virtual machine template from a downloaded disk image.
     free: True
     metadata:
-      displayName: c. Import as a template from URL.
+      displayName: b. Import as a template from URL.
     parameters:
       - title: OpenShift Admin Username
         name: admin_user
