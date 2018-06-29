@@ -1,6 +1,16 @@
+- name: Target is VM?
+  set_fact:
+    image_type: vm
+  when: _apb_plan_id == 'vmware'
+
+- name: Target is Template?
+  set_fact:
+    image_type: template
+  when: _apb_plan_id == 'vmware-template'
+  
 - name: Login As Super User
-  command: "oc login -u {{ admin_user }} -p {{ admin_password }}"
-  when: cluster=="openshift"
+  command: "oc login --insecure-skip-tls-verify=true -u {{ admin_user }} -p {{ admin_password }}"
+  when: cluster == "openshift"
 
 - name: Change project to {{ namespace }}
   command: "oc project {{ namespace }}"

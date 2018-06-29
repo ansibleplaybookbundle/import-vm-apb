@@ -12,10 +12,10 @@ metadata:
      Import Virtual Machine from an existing image or a VMware environment.
 plans:
   - name: vmware
-    description: Import a virtual machine from VMware vCenter
+    description: Import a virtual machine from VMware vCenter.
     free: True
     metadata:
-      displayName: Import from VMware
+      displayName: b. Import from VMware.
     parameters:
       - title: OpenShift Admin Username
         name: admin_user
@@ -49,16 +49,49 @@ plans:
         default: linux
         enum: ['linux', 'windows']
         type: enum
-      - title: Import Virtual Machine as
-        name: image_type
-        default: vm
-        enum: ['vm', 'template']
-        type: enum        
-  - name: url
-    description: Create a virtual machine from a downloaded disk image
+  - name: vmware-template
+    description: Import a virtual machine as a template from VMware vCenter.
     free: True
     metadata:
-      displayName: Import from URL
+      displayName: d. Import as a template from VMware.
+    parameters:
+      - title: OpenShift Admin Username
+        name: admin_user
+        type: string
+        required: true
+      - title: OpenShift Admin Password
+        name: admin_password
+        type: string
+        required: true
+        display_type: password
+      - title: VMware URL to EXSi
+        name: url
+        type: string
+        required: true
+      - title: Virtual Machine Name
+        name: vm_name
+        type: string
+        required: true
+      - title: VMware Admin Username
+        name: username
+        type: string
+        required: true
+        display_type: username
+      - title: VMware Admin Password
+        name: password
+        type: string
+        required: true
+        display_type: password
+      - title: Operating System Type
+        name: os_type
+        default: linux
+        enum: ['linux', 'windows']
+        type: enum
+  - name: url
+    description: Create a virtual machine from a downloaded disk image.
+    free: True
+    metadata:
+      displayName: a. Import from URL.
     parameters:
       - title: Disk Image URL
         name: disk_image_url
@@ -90,8 +123,48 @@ plans:
       - title: Storage Class
         name: storage_class
         type: string
-      - title: Virtual machine is imported as
-        name: image_type
-        default: vm
-        enum: ['vm', 'template']
+  - name: url-template
+    description: Create a virtual machine template from a downloaded disk image.
+    free: True
+    metadata:
+      displayName: c. Import as a template from URL.
+    parameters:
+      - title: OpenShift Admin Username
+        name: admin_user
+        type: string
+        required: true
+      - title: OpenShift Admin Password
+        name: admin_password
+        type: string
+        required: true
+        display_type: password
+      - title: Disk Image URL
+        name: disk_image_url
+        type: string
+        required: true
+      - title: Operating system type
+        name: os_type
+        default: linux
+        enum: ['linux', 'windows']
         type: enum
+      - title: Virtual Machine Name
+        name: vm_name
+        type: string
+        required: true
+      - title: Number of Cores
+        name: nr_cores
+        required: true
+        type: int
+        default: 1
+      - title: Memory (MiB)
+        name: mem
+        required: true
+        type: int
+        default: 1024
+      - title: Disk Size (GiB)
+        name: disk_size_gb
+        type: int
+        default: 0
+      - title: Storage Class
+        name: storage_class
+        type: string

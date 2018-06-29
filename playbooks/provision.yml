@@ -7,9 +7,10 @@
     install_python_requirements: no
   - role: ansibleplaybookbundle.asb-modules
   - role: import-from-url
-    when: _apb_plan_id == 'url'
+    when: _apb_plan_id == 'url' or _apb_plan_id == 'url-template'
   - role: provision-v2v
-    when: _apb_plan_id == 'vmware'
+    when: _apb_plan_id == 'vmware' or _apb_plan_id == 'vmware-template'
+    
   vars:
     action: provision
     cluster: openshift
