@@ -5,10 +5,12 @@ metadata:
   namespace: openshift
   annotations:
     description: "OCP KubeVirt Red Hat Enterprise Linux 7.4 VM template"
-    tags: "kubevirt,ocp,template,linux"
+    tags: "kubevirt,ocp,template,linux,virtualmachine"
+    iconClass: icon-other-linux
   labels:
     kubevirt.io/os: rhel7.4
     miq.github.io/kubevirt-is-vm-template: "true"
+
 objects:
 - apiVersion: kubevirt.io/v1alpha2
   kind: VirtualMachine
@@ -35,13 +37,13 @@ objects:
         volumes:
           - name: volume-1
             persistentVolumeClaim:
-              claimName: ${NAME}-disk-01
+              claimName: vm-${NAME}-disk-01
 - apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
-    name: ${NAME}-disk-01
+    name: vm-${NAME}-disk-01
     annotations:
-      k8s.io/CloneRequest: {{ pvc_name }}
+      k8s.io/CloneRequest: {{ namespace }}/{{ pvc_name }}
   spec:
 {% if storage_class is defined %}
     storageClassName: {{ storage_class }}

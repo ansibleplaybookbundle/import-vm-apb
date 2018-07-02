@@ -5,7 +5,7 @@
 - name: Set unused template variables
   set_fact:
     size_bytes: 0
-    pvc_name: "{{ vm_name }}-disk-01"
+    pvc_name: "{{ image_type }}-{{ vm_name }}-disk-01"
     disk_bus: "{{ disk_bus_by_os_type[os_type] }}"
     disk_size_bytes: 0
 

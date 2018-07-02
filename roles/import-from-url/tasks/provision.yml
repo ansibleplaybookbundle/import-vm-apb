@@ -2,11 +2,25 @@
 - name: Change project to {{ namespace }}
   command: "oc project {{ namespace }}"
 
+- name: Target is VM?
+  set_fact:
+    image_type: vm
+  when: _apb_plan_id == 'url'
+
+- name: Target is Template?
+  set_fact:
+    image_type: template
+  when: _apb_plan_id == 'url-template'
+  
+- name: Login As Super User
+  command: "oc login --insecure-skip-tls-verify=true -u {{ admin_user }} -p {{ admin_password }}"
+  when: cluster == "openshift" and image_type == "template"
+
 # Before doing anything check if the PVC already exists, if it
 # does, then don't waste the effor to look stuff up as it will
 # fail.
 - name: Check for existing PVC
-  command: "oc get pvc {{ vm_name }}-disk-01"
+  command: "oc get pvc {{image_type}}-{{ vm_name }}-disk-01"
   register: pvc_exists
   # This looks odd, the oc command queries for the pvc, and we continue if there is
   # an error (it can't find the PVC) and no stdout output. This won't solve a race
@@ -47,14 +61,14 @@
   command: "oc create -f /tmp/pvc.yml"
 
 - Name: Check PVC bound status
-  command: "oc get pvc {{ vm_name }}-disk-01 -o jsonpath='{ {{pvc_status_path}} }'"
+  command: "oc get pvc {{image_type}}-{{ vm_name }}-disk-01 -o jsonpath='{ {{pvc_status_path}} }'"
   register: pvc_bound_status
   until: pvc_bound_status.stdout == 'Bound'
   retries: 60
   delay: 3
 
 - name: Pod Import Status
-  command: "oc get pvc {{ vm_name }}-disk-01 -o jsonpath='{ {{import_status_path}} }'"
+  command: "oc get pvc {{image_type}}-{{ vm_name }}-disk-01 -o jsonpath='{ {{import_status_path}} }'"
   register: import_status
   # The values of import_status follow standard kubernetes pod phase values. Pending/Running/Succeeded/Failed/Unknown
   # The importer POD will update the status.
@@ -68,7 +82,7 @@
 
 - name: Set pvc_name
   set_fact:
-    pvc_name: "{{ vm_name }}-disk-01"
+    pvc_name: "{{image_type}}-{{ vm_name }}-disk-01"
 
 - name: Set disk_bus
   set_fact:
