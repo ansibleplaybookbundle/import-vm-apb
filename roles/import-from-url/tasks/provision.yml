@@ -60,7 +60,7 @@
 - name: Provision PVC
   command: "oc create -f /tmp/pvc.yml"
 
-- Name: Check PVC bound status
+- name: Check PVC bound status
   command: "oc get pvc {{image_type}}-{{ vm_name }}-disk-01 -o jsonpath='{ {{pvc_status_path}} }'"
   register: pvc_bound_status
   until: pvc_bound_status.stdout == 'Bound'
@@ -99,3 +99,13 @@
 
 - name: Provision VM resources
   command: "oc create -f /tmp/vm-resources.yml"
+  
+- name: Relist template broker count
+  block:
+    - name: Get current relist count"
+      command: "oc get clusterservicebroker template-service-broker -o jsonpath='{.spec.relistRequests}'"
+      register: current_relist_count
+    - command: "oc patch clusterservicebroker template-service-broker -p '{\"spec\": {\"relistRequests\": {{ current_relist_count.stdout|int + 1 }} }}'"
+      ignore_errors: yes
+  when: image_type == "template"
+
