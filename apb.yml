@@ -116,11 +116,11 @@ plans:
         required: true
         type: int
         default: 1024
-      - title: Disk Size (GiB)
+      - title: Disk Size (GiB) (leave at 0 to auto detect size)
         name: disk_size_gb
         type: int
         default: 0
-      - title: Storage Class
+      - title: Storage Class (leave empty to use the default storage class)
         name: storage_class
         type: string
   - name: url-template
@@ -161,10 +161,10 @@ plans:
         required: true
         type: int
         default: 1024
-      - title: Disk Size (GiB)
+      - title: Disk Size (GiB) (leave at 0 to auto detect size)
         name: disk_size_gb
         type: int
         default: 0
-      - title: Storage Class
+      - title: Storage Class (leave empty to use the default storage class)
         name: storage_class
         type: string
