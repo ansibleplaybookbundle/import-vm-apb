@@ -2,6 +2,16 @@
 - name: Change project to {{ namespace }}
   command: "oc project {{ namespace }}"
 
+- name: Target is VM?
+  set_fact:
+    image_type: vm
+  when: _apb_plan_id == 'url'
+
+- name: Target is Template?
+  set_fact:
+    image_type: template
+  when: _apb_plan_id == 'url-template'
+
 - name: Set unused template variables
   set_fact:
     size_bytes: 0
