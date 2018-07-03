@@ -14,3 +14,4 @@
   vars:
     action: provision
     cluster: openshift
+    _apb_service_instance_id: 0
