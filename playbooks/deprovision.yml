@@ -7,7 +7,7 @@
     install_python_requirements: no
   - role: ansibleplaybookbundle.asb-modules
   - role: import-from-url
-    when: _apb_plan_id == 'url'
+    when: _apb_plan_id == 'url' or _apb_plan_id == 'url-template'
   vars:
     action: deprovision
     cluster: openshift
