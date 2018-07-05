@@ -1,6 +1,4 @@
 ---
-- name: Change project to {{ namespace }}
-  command: "oc project {{ namespace }}"
 
 - name: Target is VM?
   set_fact:
@@ -12,25 +10,23 @@
     image_type: template
   when: _apb_plan_id == 'url-template'
 
-- name: Set unused template variables
-  set_fact:
-    size_bytes: 0
-    pvc_name: "{{ image_type }}-{{ vm_name }}-disk-01"
-    disk_bus: "{{ disk_bus_by_os_type[os_type] }}"
-    disk_size_bytes: 0
-
-- name: Build VM resources
-  template:
-    src: "{{ role_path }}/../../templates/{{ os_type }}-{{ image_type }}.j2"
-    dest: /tmp/vm-resources.yml
+- name: Change project to {{ namespace }}
+  command: "oc project {{ namespace }}"
 
 - name: Delete VM resources
-  command: "oc delete -f /tmp/vm-resources.yml --ignore-not-found=true"
+  command: "oc delete vm -l import-vm-apb/transaction_id={{ _apb_service_instance_id }} --ignore-not-found=true"
+  when: image_type == "vm"
 
-- name: Build PVC
-  template:
-    src: cdi-pvc.yml
-    dest: /tmp/pvc.yml
-
+- name: Delete Template resources
+  block:
+    - command: "oc login --insecure-skip-tls-verify=true -u {{ admin_user }} -p {{ admin_password }}"
+    - command: "oc delete template -l import-vm-apb/transaction_id={{ _apb_service_instance_id }} -n openshift --ignore-not-found=true"
+    - name: Get current relist count"
+      command: "oc get clusterservicebroker template-service-broker -o jsonpath='{.spec.relistRequests}'"
+      register: current_relist_count
+    - command: "oc patch clusterservicebroker template-service-broker -p '{\"spec\": {\"relistRequests\": {{ current_relist_count.stdout|int + 1 }} }}'"
+      ignore_errors: yes
+  when: image_type == "template"
+  
 - name: Delete PVC
-  command: "oc delete -f /tmp/pvc.yml --ignore-not-found=true"
+  command: "oc delete pvc -l import-vm-apb/transaction_id={{ _apb_service_instance_id }} --ignore-not-found=true"
