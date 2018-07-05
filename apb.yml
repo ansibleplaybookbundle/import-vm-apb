@@ -68,7 +68,7 @@ plans:
         name: url
         type: string
         required: true
-      - title: Virtual Machine Name
+      - title: Template Name
         name: vm_name
         type: string
         required: true
@@ -147,7 +147,7 @@ plans:
         default: linux
         enum: ['linux', 'windows']
         type: enum
-      - title: Virtual Machine Name
+      - title: Template Name
         name: vm_name
         type: string
         required: true
