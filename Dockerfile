@@ -99,7 +99,7 @@ COPY bin/run-v2v.sh /v2v.d/
 RUN setfacl -Rm u:apb:rwx /v2v.d
 
 COPY playbooks /opt/apb/actions
-COPY roles /opt/ansible/roles
-COPY templates /opt/ansible/templates
+COPY roles /opt/apb/actions/roles
+COPY templates /opt/apb/actions/templates
 
 USER apb
