@@ -1,4 +1,4 @@
-version: 1.0
+version: master
 name: import-vm-apb
 description: Import Virtual Machine
 bindable: False
@@ -10,6 +10,7 @@ metadata:
   imageUrl: https://cdn.pbrd.co/images/H5Gutd7.png
   longDescription: |
      Import Virtual Machine from an existing image or a VMware environment.
+     Version: master
 plans:
   - name: vmware
     description: Import a virtual machine from VMware vCenter.
