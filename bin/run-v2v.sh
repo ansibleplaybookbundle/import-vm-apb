@@ -14,12 +14,31 @@ TYPE=${7:-ovm}
 
 die() { echo $@ >&2 ; exit 1 ; }
 
+urlencode() {
+  local string="${1}"
+  local strlen=${#string}
+  local encoded=""
+  local pos c o
+
+  for (( pos=0 ; pos<strlen ; pos++ )); do
+     c=${string:${pos}:1}
+     case "$c" in
+        [-_.~a-zA-Z0-9] ) o="${c}" ;;
+        * )               printf -v o '%%%02x' "'$c"
+     esac
+     encoded+="${o}"
+  done
+  echo "${encoded}"
+}
+
+
 [[ "$VM_NAME" ]] || die "No vm name given"
 [[ "$USER" ]] || die "No username given"
 [[ "$PASS" ]] || die "No password given"
 [[ "$URI" ]] || die "No source uri given"
 
 DOMXML=$VM_NAME.xml
+ENCODED_USER=$(urlencode "$USER")
 
 # create libvirt auth file
 tee libvirt.auth <<EOF
@@ -33,7 +52,7 @@ EOF
 
 # get vm domxml
 export LIBVIRT_AUTH_FILE=libvirt.auth
-virsh -c 'vpx://'$USER'@'$URI'?no_verify=1' dumpxml $VM_NAME >> $DOMXML
+virsh -c 'vpx://'$ENCODED_USER'@'$URI'?no_verify=1' dumpxml $VM_NAME >> $DOMXML
 rm -f libvirt.auth
 
 if [ ! -f $DOMXML ];
@@ -220,6 +239,6 @@ objects:
 EOY
 
 # create the job
-oc process --local -f template.yaml -p SOURCE_TYPE=libvirt -p SOURCE_NAME=$VM_NAME -p SOURCE_URI=vpx://$USER@$URI?no_verify=1 -p OS_TYPE=$OS -p IMAGE_TYPE=$TYPE | oc apply -f -
+oc process --local -f template.yaml -p SOURCE_TYPE=libvirt -p SOURCE_NAME=$VM_NAME -p SOURCE_URI=vpx://$ENCODED_USER@$URI?no_verify=1 -p OS_TYPE=$OS -p IMAGE_TYPE=$TYPE | oc apply -f -
 
 rm -f template.yaml
