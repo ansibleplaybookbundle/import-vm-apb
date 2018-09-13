@@ -18,12 +18,14 @@
 
 # Before doing anything check if the PVC already exists, if it
 # does, then don't waste the effor to look stuff up as it will
+# We want to look for PVC and not DVs because DVs are just an abstraction on top of PVCs and
+# the real thing to check for are the PVCs
 # fail.
 - name: Check for existing PVC
-  command: "oc get pvc {{image_type}}-{{ vm_name }}-disk-01"
+  command: "oc get pvc {{image_type}}-{{ vm_name }}-dv-01"
   register: pvc_exists
   # This looks odd, the oc command queries for the pvc, and we continue if there is
-  # an error (it can't find the PVC) and no stdout output. This won't solve a race
+  # an error (it can't find the pvc) and no stdout output. This won't solve a race
   # condition, but its a useful first check regardless.
   failed_when: pvc_exists.stdout != ""
 
@@ -33,56 +35,33 @@
     method: HEAD
   register: response
 
-- name: Calculate PVC size
+- name: Calculate DV size
   set_fact:
     # Use 4% FS overhead based on this research
     # https://rwmj.wordpress.com/2009/11/08/filesystem-metadata-overhead/
     size_bytes: "{{ (response.content_length|int * 1.04)|int }}"
   when: disk_size_gb == 0
 
-- name: Calculate PVC size
+- name: Calculate DV size
   set_fact:
     size_bytes: "{{ (disk_size_gb|int * 1073741824 * 1.04)|int }}"
   when: disk_size_gb != 0
 
-- name: Build PVC
-  template:
-    src: cdi-pvc.yml
-    dest: /tmp/pvc.yml
-
-- name: Debug generated pvc
-  command: cat /tmp/pvc.yml
-  register: debug_out
-- name: Show generated pvc
-  debug:
-    msg: "{{ debug_out.stdout }}"
-
-- name: Provision PVC
-  command: "oc create -f /tmp/pvc.yml"
-
-- name: Check PVC bound status
-  command: "oc get pvc {{image_type}}-{{ vm_name }}-disk-01 -o jsonpath='{ {{pvc_status_path}} }'"
-  register: pvc_bound_status
-  until: pvc_bound_status.stdout == 'Bound'
-  retries: 60
-  delay: 3
-
-- name: Pod Import Status
-  command: "oc get pvc {{image_type}}-{{ vm_name }}-disk-01 -o jsonpath='{ {{import_status_path}} }'"
-  register: import_status
-  # The values of import_status follow standard kubernetes pod phase values. Pending/Running/Succeeded/Failed/Unknown
-  # The importer POD will update the status.
-  until: import_status.stdout == 'Succeeded' or import_status.stdout == 'Failed'
-  retries: 17280 # This equates to a day of retries. It could take a while to import the disk, so give it a long timeout.
-  delay: 5
-
-- fail:
-    msg: "Unable to import image into PVC, check importer pod log for details."
-  when: import_status.stdout != 'Succeeded'
-
-- name: Set pvc_name
-  set_fact:
-    pvc_name: "{{image_type}}-{{ vm_name }}-disk-01"
+- name: Build Template DV
+  block:
+    - name: Create DV yaml
+      template:
+        src: cdi-dv.yml
+        dest: /tmp/dv.yml
+    - name: Debug generated DV
+      command: cat /tmp/dv.yml
+      register: debug_out
+    - name: Show generated DV
+      debug:
+        msg: "{{ debug_out.stdout }}"
+    - name: Provision DV
+      command: "oc create -f /tmp/dv.yml"
+  when: image_type == "template"
 
 - name: Set disk_bus
   set_fact:
