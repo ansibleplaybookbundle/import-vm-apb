@@ -34,7 +34,7 @@ plans:
         name: vm_name
         type: string
         required: true
-        pattern: "^[a-z0-9_.-]*$"
+        pattern: "^[a-z0-9.-]*$"
       - title: VMware Admin Username
         name: username
         type: string
@@ -73,7 +73,7 @@ plans:
         name: vm_name
         type: string
         required: true
-        pattern: "^[a-z0-9_.-]*$"
+        pattern: "^[a-z0-9.-]*$"
       - title: VMware Admin Username
         name: username
         type: string
@@ -108,7 +108,7 @@ plans:
         name: vm_name
         type: string
         required: true
-        pattern: "^[a-z0-9_.-]*$"
+        pattern: "^[a-z0-9.-]*$"
       - title: Number of Cores
         name: nr_cores
         required: true
@@ -154,7 +154,7 @@ plans:
         name: vm_name
         type: string
         required: true
-        pattern: "^[a-z0-9_.-]*$"
+        pattern: "^[a-z0-9.-]*$"
       - title: Number of Cores
         name: nr_cores
         required: true
