@@ -8,6 +8,9 @@ spec:
   running: false
   template:
     spec:
+      metadata:
+        labels:
+          kubevirt.io/domain: {{ vm_name }}
       terminationGracePeriodSeconds: 0
       domain:
         features:

@@ -4,11 +4,11 @@ metadata:
   name: {{ vm_name }}-template
   namespace: openshift
   annotations:
-    description: "OCP KubeVirt Red Hat Enterprise Linux 7.4 VM template"
+    description: "OCP Linux VM template"
     tags: "kubevirt,ocp,template,linux,virtualmachine"
     iconClass: icon-other-linux
   labels:
-    kubevirt.io/os: rhel7.4
+    kubevirt.io/os: linux
     miq.github.io/kubevirt-is-vm-template: "true"
     import-vm-apb/transaction_id: "{{ _apb_service_instance_id }}"
 
@@ -21,6 +21,9 @@ objects:
     running: false
     template:
       spec:
+        metadata:
+          labels:
+            kubevirt.io/domain: ${NAME}
         domain:
           cpu:
             cores: ${{'{{'}}CPU_CORES{{'}}'}}

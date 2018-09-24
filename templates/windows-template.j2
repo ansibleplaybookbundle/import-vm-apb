@@ -4,11 +4,11 @@ metadata:
   name: {{ vm_name }}-template
   namespace: openshift
   annotations:
-    description: "OCP KubeVirt Microsoft Windows Server 2016 VM template"
+    description: "OCP KubeVirt Microsoft Windows Server VM template"
     tags: "kubevirt,ocp,template,windows,virtualmachine"
     iconClass: icon-windows
   labels:
-    kubevirt.io/os: win2k16
+    kubevirt.io/os: windows
     miq.github.io/kubevirt-is-vm-template: "true"
     import-vm-apb/transaction_id: "{{ _apb_service_instance_id }}"
 
@@ -21,6 +21,9 @@ objects:
     running: false
     template:
       spec:
+        metadata:
+          labels:
+            kubevirt.io/domain: ${NAME}
         domain:
           features:
             acpi: {}
