@@ -3,10 +3,31 @@ kind: VirtualMachine
 metadata:
   name: {{ vm_name }}
   labels:
-    import-vm-apb/transaction_id: {{ _apb_service_instance_id }}
+    import-vm-apb/transaction_id: "{{ _apb_service_instance_id }}"
+    kubevirt.io/vm: {{ vm_name }}
 spec:
+  dataVolumeTemplates:
+  - metadata:
+      name: "{{ image_type }}-{{ vm_name }}-dv-01"
+    spec:
+      pvc:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ size_bytes|int }}
+{% if storage_class is defined %}
+          storageClassName: {{ storage_class }}
+{% endif %}
+      source:
+        http:
+          url: {{ disk_image_url }}
+    status: {}
   running: false
   template:
+    metadata:
+      labels:
+        kubevirt.io/vm: {{ vm_name }}
     spec:
       terminationGracePeriodSeconds: 0
       domain:
@@ -40,8 +61,9 @@ spec:
           - name: disk-1
             disk:
               bus: {{ disk_bus }}
-            volumeName: volume-1
+            volumeName: "{{ vm_name }}-datavolumevolume"
       volumes:
-      - name: volume-1
-        persistentVolumeClaim:
-          claimName: {{ pvc_name }}
+      - dataVolume:
+          name: "{{ image_type }}-{{ vm_name }}-dv-01"
+        name: "{{ vm_name }}-datavolumevolume"
+status: {}

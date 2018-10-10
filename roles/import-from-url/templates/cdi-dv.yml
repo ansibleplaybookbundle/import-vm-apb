@@ -1,0 +1,19 @@
+apiVersion: cdi.kubevirt.io/v1alpha1
+kind: DataVolume
+metadata:
+  name: "{{ image_type }}-{{ vm_name }}-dv-01"
+  labels:
+    import-vm-apb/transaction_id: "{{ _apb_service_instance_id }}"
+spec:
+  source:
+      http:
+         url: "{{ disk_image_url }}"
+  pvc:
+{% if storage_class is defined %}
+    storageClassName: {{ storage_class }}
+{% endif %}
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: "{{ size_bytes|int }}"
