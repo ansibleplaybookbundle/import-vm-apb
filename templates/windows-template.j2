@@ -8,6 +8,7 @@ metadata:
     tags: "kubevirt,ocp,template,windows,virtualmachine"
     iconClass: icon-windows
   labels:
+    template.cnv.io/type: vm
     kubevirt.io/os: win2k16
     miq.github.io/kubevirt-is-vm-template: "true"
     import-vm-apb/transaction_id: "{{ _apb_service_instance_id }}"
